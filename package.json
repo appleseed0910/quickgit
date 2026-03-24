@@ -1,0 +1,12 @@
+{
+  "name": "quickgit",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "bin": {
+    "quickgit": "./bin/index.js"
+  },
+  "author": "foxieee",
+  "license": "MIT",
+  "packageManager": "pnpm@10.18.3"
+}
