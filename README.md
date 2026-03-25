@@ -11,3 +11,4 @@ TODO:
 
 1. 多参数enhance 比如说 prefix
 2. 实时print out cmd输出
+3. 拿**git log 对比一下 msg 浅度去重**，防止unexpected 连着push 两条（主要是 上下键的命令太近了
