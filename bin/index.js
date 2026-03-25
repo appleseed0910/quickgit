@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-import { exec } from 'child_process'
+import { exec, execFile } from 'child_process'
 import { promisify } from 'util'
 
-const execPromise = promisify(exec)
+const execFilePromise = promisify(execFile)
 const msg = process.argv[2]
 
 try {
-    await execPromise('git add :/')
-    const { stdout: commitout, stderr: commiterr } = await execPromise(`git commit -m "${msg}"`)
-    const { stdout, stderr } = await execPromise('git push')
+    await execFilePromise('git', ['add', ':/'])
+    const { stdout: commitout, stderr: commiterr } = await execFilePromise('git', ['commit', '-m', msg])
+    const { stdout, stderr } = await execFilePromise('git', ['push'])
     console.log(commitout);
     console.log(stdout);
     if (commiterr) console.error(commiterr);
