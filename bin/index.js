@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { exec, execFile } from 'child_process'
+import { execFile } from 'child_process'
 import { promisify } from 'util'
 
 const execFilePromise = promisify(execFile)
@@ -9,6 +9,12 @@ const msg = process.argv[2] ?? ''
 try {
     if (!msg) {
         throw new Error('Empty commit message!') 
+    }
+
+    const { stdout: latestMsg, stderr: latestMsgErr } = await execFilePromise('git', ['show', '-s', '--format=%B'])
+    
+    if (msg === latestMsg.replaceAll('\n', '')) {
+        throw new Error('You just committed with the same msg, you may want to double check if this is the expected cmd...')
     }
 
     await execFilePromise('git', ['add', ':/'])
