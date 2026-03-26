@@ -11,7 +11,7 @@
 
 1. 防命令注入fix, command injection. [使用 execFile代替exec]
 2. 空参数的process.exit 和 归并退出至 catch block 中
-3. 3. 拿**git log 对比一下 msg 浅度去重**，防止unexpected 连着push 两条（主要是 上下键的命令太近了
+3. 拿**git log 对比一下 msg 浅度去重**，防止unexpected 连着push 两条（主要是 上下键的命令太近了
 
 ---
 
