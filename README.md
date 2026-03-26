@@ -2,6 +2,9 @@
 
 ### Usage    
 
+- quickgit 'commit message'
+    - contains 3 git cmds `git add :/`, `git commit -m 'commit message'`, `git push`
+
 ---
 
 ### Done: 
