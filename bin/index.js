@@ -6,25 +6,39 @@ import { promisify } from 'util'
 const execFilePromise = promisify(execFile)
 const msg = process.argv[2] ?? ''
 
-try {
-    if (!msg) {
-        throw new Error('Empty commit message!') 
+const getLatestCommitMsg = async () => {
+    try {
+        const { stdout }  = await execFilePromise('git', ['show', '-s', '--format=%B'])
+        return stdout.trim()
+    } catch (e) {
+        if (e?.stderr?.includes('does not have any commits yet')) {
+            console.info('Attention: this is the first commit of your repo!')
+            return ''
+        }
+        throw e
     }
+}
 
-    const { stdout: latestMsg, stderr: latestMsgErr } = await execFilePromise('git', ['show', '-s', '--format=%B'])
-    
-    if (msg === latestMsg.replaceAll('\n', '')) {
-        throw new Error('You just committed with the same msg, you may want to double check if this is the expected cmd...')
-    }
-
+const packRun = async () => {
     await execFilePromise('git', ['add', ':/'])
-    const { stdout: commitout, stderr: commiterr } = await execFilePromise('git', ['commit', '-m', msg])
-    const { stdout, stderr } = await execFilePromise('git', ['push'])
+    const { stdout: commitout} = await execFilePromise('git', ['commit', '-m', msg])
+    const { stdout } = await execFilePromise('git', ['push'])
     console.log(commitout);
     console.log(stdout);
-    if (commiterr) console.error(commiterr);
-    if (stderr) console.error(stderr);
-} catch (e) {
-    console.error(e?.message);
-    process.exit(1)
 }
+
+const main = async () => {
+    if (!msg.trim()) {
+        throw new Error('Empty commit message!')
+    }
+    const latestMsg = await getLatestCommitMsg()
+    if (msg === latestMsg.trim()) {
+        throw new Error('You just committed with the same msg, you may want to double check if this is the expected cmd...')
+    }
+    await packRun()
+}
+
+main().catch(e => {
+    console.error(e?.stderr || e?.message || e);
+    process.exit(1)
+})
